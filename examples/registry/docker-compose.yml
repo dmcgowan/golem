@@ -89,3 +89,16 @@ docker:
   links:
     - nginx:localregistry
     - nginx:auth.localregistry
+dockernoschema2:
+  image: docker:1.9.1-dind
+  container_name: dockerdaemon-noschema2
+  command: "docker daemon --debug -s $DOCKER_GRAPHDRIVER"
+  privileged: true
+  environment:
+    DOCKER_GRAPHDRIVER:
+  volumes:
+    - ./generated_certs.d:/etc/docker/certs.d
+    - /var/lib/docker
+  links:
+    - nginx:localregistry
+    - nginx:auth.localregistry
