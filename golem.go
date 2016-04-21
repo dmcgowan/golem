@@ -90,6 +90,7 @@ func runnerMain() {
 	var (
 		command        string
 		forwardAddress string
+		tapSocket      string
 		dind           bool
 		clean          bool
 	)
@@ -97,6 +98,7 @@ func runnerMain() {
 	// TODO: Parse runner options
 	flag.StringVar(&command, "command", "bats", "Command to run")
 	flag.StringVar(&forwardAddress, "forward", "", "Address to forward logs to")
+	flag.StringVar(&tapSocket, "tap-socket", "/var/run/golem-logs", "Socket to spawn log tapper")
 	flag.BoolVar(&dind, "docker", false, "Whether to run docker")
 	flag.BoolVar(&clean, "clean", false, "Whether to ensure /var/lib/docker is empty")
 
@@ -106,6 +108,16 @@ func runnerMain() {
 	logrus.SetLevel(logrus.DebugLevel)
 
 	router := runner.NewLogRouter("/var/log/docker")
+
+	if tapSocket != "" {
+		logrus.Debugf("Start local log tapping at %s", tapSocket)
+		//ll, err := net.Listen("unix", logSocket)
+		//if err != nil {
+		//	logrus.Fatalf("Error creating listener for %s: %#v", logSocket, err)
+		//}
+
+		//go router.Serve(ll)
+	}
 
 	if forwardAddress != "" {
 		logrus.Debugf("Forwarding logs to %s", forwardAddress)
